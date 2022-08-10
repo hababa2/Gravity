@@ -14,33 +14,24 @@ public class Highlight : MonoBehaviour
 		renderer = GetComponent<MeshRenderer>();	
 	}
 
+	//TODO: Fix this
+
 	private void OnMouseOver()
 	{
-		if (((isObject && PlayerStats.CanSetObjectGravity) || (!isObject && PlayerStats.CanSetPlayerGravity)) && Input.GetButtonUp("Fire2"))
+		if (Input.GetButtonUp("Fire2"))
 		{
 			renderer.materials = new Material[] { renderer.materials[0] };
 		}
-	}
 
-	private void OnMouseUp()
-	{
-		if (((isObject && PlayerStats.CanSetObjectGravity) || (!isObject && PlayerStats.CanSetPlayerGravity)) && !Input.GetButton("Fire2"))
+		if (((isObject && PlayerStats.CanSetObjectGravity) || (!isObject && PlayerStats.CanSetPlayerGravity)) && Input.GetButtonDown("Fire2"))
 		{
-			renderer.materials = new Material[] { renderer.materials[0] };
+			renderer.materials = new Material[] { renderer.materials[0], highlight };
 		}
 	}
 
 	private void OnMouseExit()
 	{
 		renderer.materials = new Material[] { renderer.materials[0] };
-	}
-
-	private void OnMouseDown()
-	{
-		if (((isObject && PlayerStats.CanSetObjectGravity) || (!isObject && PlayerStats.CanSetPlayerGravity)) && Input.GetButton("Fire2"))
-		{
-			renderer.materials = new Material[] { renderer.materials[0], highlight };
-		}
 	}
 
 	private void OnMouseEnter()

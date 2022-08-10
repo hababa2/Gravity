@@ -51,6 +51,8 @@ MonoBehaviour:
   openOnProximity: 1
   leftDoor: {fileID: 8514896729395440016}
   rightDoor: {fileID: 8514896729034165063}
+  open: {fileID: 8300000, guid: f4a815a34aec52f4fa837a31d68260e2, type: 3}
+  close: {fileID: 8300000, guid: 0577af226a34bc94092c70bc43004f8b, type: 3}
 --- !u!135 &5384448628819236159
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -80,7 +82,7 @@ GameObject:
   - component: {fileID: 8514896729034165062}
   m_Layer: 10
   m_Name: RightDoor
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,7 +96,7 @@ Transform:
   m_GameObject: {fileID: 8514896729034165056}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 2.5, y: -2.25, z: 0}
-  m_LocalScale: {x: 5, y: 0.10000001, z: 5}
+  m_LocalScale: {x: 5, y: 0.08, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3764821702554070399}
@@ -192,6 +194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 2100000, guid: 6e28d0951256ef444b226bae812415b4, type: 2}
+  isObject: 0
 --- !u!1 &8514896729395440023
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,7 +211,7 @@ GameObject:
   - component: {fileID: 8514896729395440017}
   m_Layer: 10
   m_Name: LeftDoor
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -222,7 +225,7 @@ Transform:
   m_GameObject: {fileID: 8514896729395440023}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -2.5, y: -2.25, z: 0}
-  m_LocalScale: {x: 5, y: 0.10000001, z: 5}
+  m_LocalScale: {x: 5, y: 0.08, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3764821702554070399}
@@ -320,6 +323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 2100000, guid: 6e28d0951256ef444b226bae812415b4, type: 2}
+  isObject: 0
 --- !u!1 &8514896729983276802
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,7 +340,7 @@ GameObject:
   - component: {fileID: 8514896729983276804}
   m_Layer: 10
   m_Name: Wall
-  m_TagString: Ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -448,3 +452,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlight: {fileID: 2100000, guid: 6e28d0951256ef444b226bae812415b4, type: 2}
+  isObject: 0

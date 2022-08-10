@@ -23,6 +23,14 @@ public class CharacterController : MonoBehaviour
 	private Quaternion endRot;
 	private float rotateTimer = -1.0f;
 
+	private float cutsceneTimer = -1.0f;
+	private Vector3 startPos;
+	private Vector3 endPos;
+	private Quaternion startCamX;
+	private Quaternion endCamX;
+	private Quaternion startCamY;
+	private Quaternion endCamY;
+
 	private Rigidbody rb;
 	[SerializeField] private Transform groundCheck;
 	[SerializeField] private Transform orientation;
@@ -50,36 +58,49 @@ public class CharacterController : MonoBehaviour
 
 			if (Input.GetButton("Fire2") && Input.GetButtonDown("Fire1"))
 			{
-				foreach (RaycastHit hit in Physics.RaycastAll(camera.position, camera.forward, 100.0f))
+				RaycastHit hit;
+
+				if (Physics.Raycast(camera.position, camera.forward, out hit, 100.0f))
 				{
-					if (hit.transform.tag == "Glass") { break; }
 					if (hit.transform.tag == "Object")
 					{
 						selectedObject = hit.transform.gameObject.GetComponent<GravityObject>();
-						break;
 					}
 					else if (hit.transform.tag == "Ground")
 					{
 						if (PlayerStats.CanSetObjectGravity && selectedObject != null)
 						{
-							//change gravity of that object
 							selectedObject.ChangeGravity(-hit.normal);
 
 							selectedObject = null;
 						}
-						else if(PlayerStats.CanSetPlayerGravity)
+						else if (PlayerStats.CanSetPlayerGravity)
 						{
 							gravityDirection = -hit.normal;
 							gravityMagnitude = 0.0f;
-							Debug.DrawRay(Vector3.zero, gravityDirection, Color.black, 10);
 
-							//Rotate Player
 							startRot = transform.rotation;
 							endRot = Quaternion.FromToRotation(Vector3.up, hit.normal);
 							rotateTimer = 1.0f;
 						}
+					}
+					else if (hit.transform.tag == "Anti-Ground")
+					{
+						if (PlayerStats.CanSetObjectGravity && selectedObject != null)
+						{
+							selectedObject.ChangeGravity(hit.normal);
 
-						break;
+							selectedObject = null;
+						}
+						else if (PlayerStats.CanSetPlayerGravity)
+						{
+							gravityDirection = hit.normal;
+							gravityMagnitude = 0.0f;
+
+							startRot = transform.rotation;
+							endRot = Quaternion.FromToRotation(Vector3.up, -hit.normal);
+							rotateTimer = 1.0f;
+						}
 					}
 				}
 			}
@@ -110,6 +131,29 @@ public class CharacterController : MonoBehaviour
 		else
 		{
 			rb.velocity = Vector3.zero;
+
+			if (cutsceneTimer >= 0.0f)
+			{
+				cutsceneTimer -= Time.fixedDeltaTime;
+				camera.localRotation = Quaternion.Slerp(endCamX, startCamX, Mathf.Max(cutsceneTimer, 0.0f));
+				camera.parent.localRotation = Quaternion.Slerp(endCamY, startCamY, Mathf.Max(cutsceneTimer, 0.0f));
+				transform.rotation = Quaternion.Slerp(endRot, startRot, Mathf.Max(cutsceneTimer, 0.0f));
+				transform.position = Vector3.Lerp(endPos, startPos, Mathf.Max(cutsceneTimer, 0.0f));
+			}
 		}
+	}
+
+	public void SetCharacter(Vector3 position, Quaternion rotation, float camX, float camY)
+	{
+		startRot = transform.rotation;
+		endRot = rotation;
+		startPos = transform.position;
+		endPos = position;
+		startCamX = camera.localRotation;
+		endCamX = Quaternion.Euler(Vector3.right * camX);
+		startCamY = camera.parent.localRotation;
+		endCamY = Quaternion.Euler(Vector3.up * camY);
+
+		cutsceneTimer = 1.0f;
 	}
 }

@@ -16,5 +16,17 @@ public class Pedestal : MonoBehaviour
 	{
 		PlayerStats.Unlock(unlockID);
 		Destroy(model);
+		StartCoroutine(Sink());
+	}
+
+	IEnumerator Sink()
+	{
+		float dist = 1.0f;
+		while(dist > 0.0f)
+		{
+			dist -= Time.deltaTime;
+			transform.Translate(Vector3.down * Time.deltaTime);
+			yield return new WaitForEndOfFrame();
+		}
 	}
 }

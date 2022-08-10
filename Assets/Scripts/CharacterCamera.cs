@@ -10,18 +10,30 @@ public class CharacterCamera : MonoBehaviour
 	private Transform player;
 	private Quaternion center;
 
-	void Start()
+	private static Quaternion camRotX;
+	private static Quaternion camRotY;
+
+	private void Awake()
 	{
 		player = transform.parent;
-		center = transform.rotation;
+		center = Quaternion.identity;
+
+		transform.localRotation = camRotX;
+		player.localRotation = camRotY;
 	}
 
-	void Update()
+	void FixedUpdate()
 	{
-		player.Rotate(Vector3.up, Input.GetAxis("Mouse X") * SENSITIVITY * Time.deltaTime);
+		if (PlayerStats.CanLook)
+		{
+			player.Rotate(Vector3.up, Input.GetAxis("Mouse X") * SENSITIVITY * Time.deltaTime);
 
-		float mouseY = Input.GetAxis("Mouse Y") * SENSITIVITY * Time.deltaTime;
-		Quaternion yQuat = transform.localRotation * Quaternion.Euler(-mouseY, 0.0f, 0.0f);
-		if (Quaternion.Angle(center, yQuat) < MAX_ANGLE) { transform.localRotation = yQuat; }
+			float mouseY = Input.GetAxis("Mouse Y") * SENSITIVITY * Time.deltaTime;
+			Quaternion yQuat = transform.localRotation * Quaternion.Euler(-mouseY, 0.0f, 0.0f);
+			if (Quaternion.Angle(center, yQuat) < MAX_ANGLE) { transform.localRotation = yQuat; }
+		}
+
+		camRotX = transform.localRotation;
+		camRotY = player.localRotation;
 	}
 }
