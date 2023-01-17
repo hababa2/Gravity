@@ -9,10 +9,10 @@ public class CharacterController : MonoBehaviour
 	private static readonly float WALK_SPEED = 400.0f;
 	private static readonly float RUN_SPEED = 600.0f;
 	private static readonly float AIR_SPEED = 300.0f;
-	private static readonly float JUMP_FORCE = 100.0f;
+	private static readonly float JUMP_FORCE = 200.0f;
 	private static readonly float MASS = 5.0f;
 	private static readonly float INV_MASS = 1.0f / MASS;
-	private static readonly float GRAVITY = 9.8f;
+	private static readonly float GRAVITY = 19.6134f;
 	private static readonly float JUMP_COOLDOWN = 0.1f;
 	private static readonly int GROUND_MASK = 1 << 10;
 	private static readonly int GROUND_OBJECT_MASK = (1 << 10) | (1 << 13);
@@ -25,6 +25,7 @@ public class CharacterController : MonoBehaviour
 	private Vector3 gravityDirection = Vector3.down;
 	private bool grounded = false;
 
+	private Vector3 rotation;
 	private Quaternion startRot;
 	private Quaternion endRot;
 
@@ -90,6 +91,7 @@ public class CharacterController : MonoBehaviour
 				Physics.Raycast(camera.position, camera.forward, out hit, Mathf.Infinity, GROUND_MASK))
 			{
 				Vector3 direction = GetGravityDirection(hit);
+				gravityDirection = direction;
 				startRot = transform.rotation;
 				endRot = Quaternion.FromToRotation(Vector3.up, -direction);
 				rotateTimer = 1.0f;
@@ -105,7 +107,7 @@ public class CharacterController : MonoBehaviour
 				else if (selectedObject != null)
 				{
 					Vector3 direction = GetGravityDirection(hit);
-					selectedObject.ChangeGravity(hit.normal);
+					selectedObject.ChangeGravity(direction);
 				}
 			}
 		}
@@ -118,9 +120,15 @@ public class CharacterController : MonoBehaviour
 			transform.position = Vector3.Lerp(endPos, startPos, Mathf.Max(cutsceneTimer, 0.0f));
 		}
 
+		if (rotateTimer >= 0.0f)
+		{
+			rotateTimer -= Time.fixedDeltaTime;
+			transform.rotation = Quaternion.Slerp(endRot, startRot, Mathf.Max(rotateTimer, 0.0f));
+		}
+
 		velocity += gravityDirection * GRAVITY * Time.fixedDeltaTime * MASS;                    //Apply Gravity
 		velocity += force * INV_MASS;                                                           //Apply Instant Forces
-		velocity -= velocity.normalized * velocity.sqrMagnitude * 0.5f * Time.fixedDeltaTime;   //Apply Drag
+		velocity -= velocity.normalized * velocity.sqrMagnitude * 0.3f * Time.fixedDeltaTime;   //Apply Drag
 		rb.velocity = velocity + movement;
 
 		force = Vector3.zero;
